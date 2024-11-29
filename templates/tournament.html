@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Swiss Tournament - Round {{ round }}</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            text-align: center;
+            margin-top: 30px;
+        }
+        .match-info {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .participant {
+            display: inline-block;
+            width: 45%;
+            vertical-align: top;
+            margin: 10px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .participant h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        .participant img, .participant video, .participant audio, .participant embed, .participant iframe {
+            max-width: 100%;
+            border-radius: 5px;
+        }
+        .vs {
+            display: inline-block;
+            vertical-align: top;
+            font-size: 30px;
+            margin: 30px 0;
+        }
+        form {
+            text-align: center;
+            margin-top: 30px;
+        }
+        button {
+            padding: 15px 30px;
+            margin: 10px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        h3 {
+            margin-bottom: 20px;
+        }
+        @media (max-width: 800px) {
+            .participant {
+                width: 100%;
+                margin: 10px 0;
+            }
+            .vs {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Round {{ round }} - Match {{ match_number }} of {{ total_matches }}</h1>
+    {% if matchup.p2 %}
+    <div class="match-info">
+        <div class="participant">
+            <h2>{{ matchup.p1.name }}</h2>
+            {% if matchup.p1.file %}
+                {% if matchup.p1.file.endswith(('.png', '.jpg', '.jpeg', '.gif')) %}
+                    <img src="{{ url_for('uploaded_file', filename=matchup.p1.file) }}" alt="{{ matchup.p1.name }}">
+                {% elif matchup.p1.file.endswith(('.mp4', '.mov', '.avi')) %}
+                    <video controls>
+                        <source src="{{ url_for('uploaded_file', filename=matchup.p1.file) }}">
+                    </video>
+                {% elif matchup.p1.file.endswith(('.mp3', '.wav')) %}
+                    <audio controls>
+                        <source src="{{ url_for('uploaded_file', filename=matchup.p1.file) }}">
+                    </audio>
+                {% elif matchup.p1.file.endswith('.pdf') %}
+                    <embed src="{{ url_for('uploaded_file', filename=matchup.p1.file) }}" type="application/pdf" width="100%" height="500px" />
+                {% elif matchup.p1.file.endswith('.txt') %}
+                    <iframe src="{{ url_for('uploaded_file', filename=matchup.p1.file) }}" width="100%" height="500px"></iframe>
+                {% endif %}
+            {% endif %}
+        </div>
+        <div class="vs">VS</div>
+        <div class="participant">
+            <h2>{{ matchup.p2.name }}</h2>
+            {% if matchup.p2.file %}
+                {% if matchup.p2.file.endswith(('.png', '.jpg', '.jpeg', '.gif')) %}
+                    <img src="{{ url_for('uploaded_file', filename=matchup.p2.file) }}" alt="{{ matchup.p2.name }}">
+                {% elif matchup.p2.file.endswith(('.mp4', '.mov', '.avi')) %}
+                    <video controls>
+                        <source src="{{ url_for('uploaded_file', filename=matchup.p2.file) }}">
+                    </video>
+                {% elif matchup.p2.file.endswith(('.mp3', '.wav')) %}
+                    <audio controls>
+                        <source src="{{ url_for('uploaded_file', filename=matchup.p2.file) }}">
+                    </audio>
+                {% elif matchup.p2.file.endswith('.pdf') %}
+                    <embed src="{{ url_for('uploaded_file', filename=matchup.p2.file) }}" type="application/pdf" width="100%" height="500px" />
+                {% elif matchup.p2.file.endswith('.txt') %}
+                    <iframe src="{{ url_for('uploaded_file', filename=matchup.p2.file) }}" width="100%" height="500px"></iframe>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+    <form method="post">
+        <h3>Select Winner:</h3>
+        <button type="submit" name="winner" value="{{ matchup.p1.name }}">{{ matchup.p1.name }}</button>
+        <button type="submit" name="winner" value="{{ matchup.p2.name }}">{{ matchup.p2.name }}</button>
+    </form>
+    {% else %}
+    <div class="participant" style="width: 80%; margin: 20px auto;">
+        <h2>{{ matchup.p1.name }} has a bye</h2>
+        {% if matchup.p1.file %}
+            {% if matchup.p1.file.endswith(('.png', '.jpg', '.jpeg', '.gif')) %}
+                <img src="{{ url_for('uploaded_file', filename=matchup.p1.file) }}" alt="{{ matchup.p1.name }}">
+            {% elif matchup.p1.file.endswith(('.mp4', '.mov', '.avi')) %}
+                <video controls>
+                    <source src="{{ url_for('uploaded_file', filename=matchup.p1.file) }}">
+                </video>
+            {% elif matchup.p1.file.endswith(('.mp3', '.wav')) %}
+                <audio controls>
+                    <source src="{{ url_for('uploaded_file', filename=matchup.p1.file) }}">
+                </audio>
+            {% elif matchup.p1.file.endswith('.pdf') %}
+                <embed src="{{ url_for('uploaded_file', filename=matchup.p1.file) }}" type="application/pdf" width="100%" height="500px" />
+            {% elif matchup.p1.file.endswith('.txt') %}
+                <iframe src="{{ url_for('uploaded_file', filename=matchup.p1.file) }}" width="100%" height="500px"></iframe>
+            {% endif %}
+        {% endif %}
+    </div>
+    <form method="post">
+        <button type="submit" name="winner" value="{{ matchup.p1.name }}">Continue</button>
+    </form>
+    {% endif %}
+</body>
+</html>
